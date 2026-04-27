@@ -4,7 +4,6 @@ import { setFilter } from './store/filterSlice'
 import TaskList from './components/TaskList'
 import AddTask from './components/AddTask'
 import TaskFilterComponent from './components/TaskFilter'
-import './App.css'
 
 function App() {
   const dispatch = useAppDispatch()
@@ -49,25 +48,35 @@ function App() {
   }
 
   return (
-    <div className="app">
-      <header className="app-header">
-        <h1>Todo List</h1>
+    <div className="container my-4 border rounded p-0" style={{ maxWidth: 800 }}>
+      <header className="mb-2">
+        <h1 className="text-center fw-bold">Todo List</h1>
       </header>
       
-      <main className="app-main">
+      <main>
         <AddTask onAdd={handleAddTask} />
-        <TaskFilterComponent 
-          filter={filter} 
-          onFilterChange={(newFilter) => dispatch(setFilter(newFilter))} 
-        />
         <TaskList 
           tasks={tasks} 
           filter={filter}
           onToggle={handleToggleTask}
           onDelete={handleDeleteTask}
         />
-        {isLoading && <p>Loading tasks...</p>}
-        {error && <p>Error loading tasks: {JSON.stringify(error)}</p>}
+        {isLoading && (
+        <div className="text-center py-3">
+          <div className="spinner-grow spinner-grow-sm me-2" role="status"></div>
+          <span className="text-muted">Loading tasks...</span>
+          </div>
+        )}
+        {error && (
+        <div className="text-center py-3">
+          <p className="text-danger">Error loading tasks</p>
+          </div>
+        )}
+        <TaskFilterComponent 
+          filter={filter} 
+          onFilterChange={(newFilter) => dispatch(setFilter(newFilter))}
+          tasks={tasks}
+        />
       </main>
     </div>
   )

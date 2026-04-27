@@ -16,16 +16,19 @@ export default function AddTask({ onAdd }: AddTaskProps) {
   };
 
   return (
-    <form className="add-task" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="d-flex gap-2 border-top p-2">
       <input
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Add a new task..."
-        className="task-input"
+        className="form-control flex-grow-1"
       />
-      <button type="submit" className="add-btn">
-        Add Task
+      <button 
+        type="submit"
+        className="btn btn-success"
+      >
+      <i className="bi bi-plus-circle"></i>
       </button>
     </form>
   );

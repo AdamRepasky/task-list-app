@@ -8,18 +8,21 @@ interface TaskItemProps {
 
 export default function TaskItem({ task, onToggle, onDelete }: TaskItemProps) {
   return (
-    <div className={`task-item ${task.completed ? 'completed' : 'active'}`}>
+    <div className="d-flex align-items-center gap-3 p-3 bg-light border-top">
       <input
         type="checkbox"
         checked={task.completed}
         onChange={() => onToggle(task.id)}
+        className="form-check-input"
       />
-      <span className="task-text">{task.text}</span>
+      <span className={`flex-grow-1 ${task.completed ? 'text-decoration-line-through text-muted' : ''}`}>
+        {task.text}
+      </span>
       <button 
-        className="delete-btn"
         onClick={() => onDelete(task.id)}
+        className="btn btn-outline-danger rounded-circle"
       >
-        Delete
+        <i className="bi bi-trash"></i>
       </button>
     </div>
   );

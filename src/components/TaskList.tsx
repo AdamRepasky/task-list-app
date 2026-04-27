@@ -21,18 +21,27 @@ export default function TaskList({ tasks, filter, onToggle, onDelete }: TaskList
   });
 
   return (
-    <div className="task-list">
+    <div>
       {filteredTasks.length === 0 ? (
-        <p className="empty-state">No tasks found</p>
+        <div className="text-center py-4">
+          <p className="text-muted">No tasks found</p>
+          <p className="text-secondary small">
+            {filter === 'active' ? 'No active tasks' : 
+             filter === 'completed' ? 'No completed tasks' : 
+             'Add your first task to get started!'}
+          </p>
+        </div>
       ) : (
-        filteredTasks.map(task => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            onToggle={onToggle}
-            onDelete={onDelete}
-          />
-        ))
+        <div>
+          {filteredTasks.map(task => (
+            <TaskItem
+              key={task.id}
+              task={task}
+              onToggle={onToggle}
+              onDelete={onDelete}
+            />
+          ))}
+        </div>
       )}
     </div>
   );
