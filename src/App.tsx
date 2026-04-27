@@ -1,7 +1,6 @@
 import { useAppDispatch, useAppSelector } from './store/hooks'
 import { useGetTasksQuery, useCreateTaskMutation, useCompleteTaskMutation, useIncompleteTaskMutation, useDeleteTaskMutation } from './store/apiSlice'
 import { setFilter } from './store/filterSlice'
-import type { TaskFilter } from './types/task'
 import TaskList from './components/TaskList'
 import AddTask from './components/AddTask'
 import TaskFilterComponent from './components/TaskFilter'
@@ -18,9 +17,9 @@ function App() {
   const [incompleteTask] = useIncompleteTaskMutation()
   const [deleteTask] = useDeleteTaskMutation()
 
-  const handleAddTask = async (title: string) => {
+  const handleAddTask = async (text: string) => {
     try {
-      await createTask({ title })
+      await createTask({ text })
     } catch (err) {
       console.error('Failed to create task:', err)
     }

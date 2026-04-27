@@ -16,7 +16,7 @@ export const apiSlice = createApi({
     }),
 
     // Create a new task
-    createTask: builder.mutation<Task, { title: string }>({
+    createTask: builder.mutation<Task, { text: string }>({
       query: (task) => ({
         url: '/tasks',
         method: 'POST',
@@ -26,11 +26,11 @@ export const apiSlice = createApi({
     }),
 
     // Update task text
-    updateTask: builder.mutation<Task, { id: string; title: string }>({
-      query: ({ id, title }) => ({
+    updateTask: builder.mutation<Task, { id: string; text: string }>({
+      query: ({ id, text }) => ({
         url: `/tasks/${id}`,
         method: 'POST',
-        body: { title },
+        body: { text },
       }),
       invalidatesTags: ['Task'],
     }),

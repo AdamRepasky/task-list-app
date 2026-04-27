@@ -116,12 +116,12 @@
   cursor: pointer;
 }
 
-.task-title {
+.task-test {
   flex: 1;
   font-size: 16px;
 }
 
-.task-item.completed .task-title {
+.task-item.completed .task-test {
   text-decoration: line-through;
   color: #666;
 }

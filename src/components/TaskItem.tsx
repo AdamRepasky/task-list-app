@@ -14,7 +14,7 @@ export default function TaskItem({ task, onToggle, onDelete }: TaskItemProps) {
         checked={task.completed}
         onChange={() => onToggle(task.id)}
       />
-      <span className="task-title">{task.title}</span>
+      <span className="task-text">{task.text}</span>
       <button 
         className="delete-btn"
         onClick={() => onDelete(task.id)}
