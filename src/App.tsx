@@ -47,6 +47,15 @@ function App() {
     }
   }
 
+  const handleDeleteCompleted = async () => {
+    try {
+      const completedTasks = tasks.filter(task => task.completed)
+      await Promise.all(completedTasks.map(task => deleteTask(task.id)))
+    } catch (err) {
+      console.error('Failed to delete completed tasks:', err)
+    }
+  }
+
   return (
     <div className="container my-4 border rounded p-0" style={{ maxWidth: 800 }}>
       <header className="mb-2">
@@ -76,6 +85,7 @@ function App() {
           filter={filter} 
           onFilterChange={(newFilter) => dispatch(setFilter(newFilter))}
           tasks={tasks}
+          onDeleteCompleted={handleDeleteCompleted}
         />
       </main>
     </div>

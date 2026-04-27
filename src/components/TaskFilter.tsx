@@ -4,9 +4,10 @@ interface TaskFilterProps {
   filter: TaskFilter;
   onFilterChange: (filter: TaskFilter) => void;
   tasks: Task[];
+  onDeleteCompleted: () => void;
 }
 
-export default function TaskFilterComponent({ filter, onFilterChange, tasks }: TaskFilterProps) {
+export default function TaskFilterComponent({ filter, onFilterChange, tasks, onDeleteCompleted }: TaskFilterProps) {
   const activeTasksCount = tasks.filter(task => !task.completed).length;
 
   return (
@@ -36,7 +37,10 @@ export default function TaskFilterComponent({ filter, onFilterChange, tasks }: T
         </button>
       </div>
       
-      <button className="btn btn-outline-danger order-4 order-md-3 align-self-md-auto">
+      <button 
+        className="btn btn-outline-danger order-4 order-md-3 align-self-md-auto"
+        onClick={onDeleteCompleted}
+      >
         <i className="bi bi-trash"></i> Delete completed
       </button>
     </div>
