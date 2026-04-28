@@ -2,9 +2,9 @@ import { useAppDispatch, useAppSelector } from './store/hooks'
 import { useGetTasksQuery, useCreateTaskMutation, useCompleteTaskMutation, useIncompleteTaskMutation, useDeleteTaskMutation } from './store/apiSlice'
 import { setFilter } from './store/filterSlice'
 import { addToast } from './store/toastSlice'
-import AddTask from './components/AddTask';
+import TopTaskControls from './components/TopTaskControls';
 import TaskList from './components/TaskList';
-import TaskControlsComponent from './components/TaskControls';
+import BottomTaskControls from './components/BottomTaskControls';
 import ToastContainer from './components/ToastContainer';
 
 function App() {
@@ -56,6 +56,25 @@ function App() {
     }
   }
 
+  const handleCompleteAll = async () => {
+    const incompleteTasks = tasks.filter(task => !task.completed)
+    const completedTasks = tasks.filter(task => task.completed)
+    
+    if (incompleteTasks.length > 0) {
+      // Complete all incomplete tasks
+      const results = await Promise.all(incompleteTasks.map(task => completeTask(task.id)))
+      if (results.some(result => result.error)) {
+        dispatch(addToast('Failed to complete all tasks'));
+      }
+    } else {
+      // Uncheck all completed tasks
+      const results = await Promise.all(completedTasks.map(task => incompleteTask(task.id)))
+      if (results.some(result => result.error)) {
+        dispatch(addToast('Failed to uncheck all tasks'));
+      }
+    }
+  }
+
   return (
     <div className="container my-4 border rounded p-0" style={{ maxWidth: 800 }}>
       <header className="mb-2">
@@ -63,7 +82,7 @@ function App() {
       </header>
       
       <main>
-        <AddTask onAdd={handleAddTask} />
+        <TopTaskControls onAdd={handleAddTask} tasks={tasks} onCompleteAll={handleCompleteAll} />
         <TaskList 
           tasks={tasks} 
           filter={filter}
@@ -82,7 +101,7 @@ function App() {
           <p className="text-danger">Error loading tasks</p>
           </div>
         )}
-        <TaskControlsComponent 
+        <BottomTaskControls 
           filter={filter} 
           onFilterChange={(newFilter) => dispatch(setFilter(newFilter))}
           tasks={tasks}
