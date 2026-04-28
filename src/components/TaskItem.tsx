@@ -7,9 +7,10 @@ interface TaskItemProps {
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
   onEdit: (id: string, newText: string) => void;
+  isLast?: boolean;
 }
 
-export default function TaskItem({ task, onToggle, onDelete, onEdit }: TaskItemProps) {
+export default function TaskItem({ task, onToggle, onDelete, onEdit, isLast }: TaskItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(task.text);
   const taskItemRef = useRef<HTMLDivElement>(null);
@@ -73,7 +74,7 @@ export default function TaskItem({ task, onToggle, onDelete, onEdit }: TaskItemP
   return (
     <div 
       ref={taskItemRef}
-      className={`d-flex align-items-center gap-3 p-3 bg-light border-top ${isEditing ? 'cursor-default' : 'cursor-pointer'}`}
+      className={`d-flex align-items-center gap-3 p-3 bg-light border-top ${isLast ? 'border-bottom' : ''} ${isEditing ? 'cursor-default' : 'cursor-pointer'}`}
       onDoubleClick={handleDoubleClick}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}

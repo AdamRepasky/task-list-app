@@ -57,13 +57,14 @@ export default function TaskList({ tasks, filter, onToggle, onDelete, onEdit, is
         </div>
       ) : (
         <div className="overflow-auto task-list-max-height">
-          {filteredTasks.map(task => (
+          {filteredTasks.map((task, index) => (
             <TaskItem
               key={task.id}
               task={task}
               onToggle={onToggle}
               onDelete={onDelete}
               onEdit={onEdit}
+              isLast={index === filteredTasks.length - 1}
             />
           ))}
         </div>
