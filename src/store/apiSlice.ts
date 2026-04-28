@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { Task } from '../types/task';
+import { optimisticUpdateUtils } from '../utils/optimisticUpdateUtils';
 
 // Define the API slice
 export const apiSlice = createApi({
@@ -22,7 +23,17 @@ export const apiSlice = createApi({
         method: 'POST',
         body: task,
       }),
-      invalidatesTags: ['Task'], // Invalidate cache when creating
+      // Optimistic update
+      onQueryStarted: async (task, { dispatch, queryFulfilled }) => {
+        const tempTask = optimisticUpdateUtils.addTempTask(dispatch, apiSlice, task);
+
+        try {
+          const { data: createdTask } = await queryFulfilled;
+          optimisticUpdateUtils.replaceTempTask(dispatch, apiSlice, tempTask.id, createdTask);
+        } catch {
+          optimisticUpdateUtils.removeTempTask(dispatch, apiSlice, tempTask.id);
+        }
+      },
     }),
 
     // Update task text
@@ -41,7 +52,22 @@ export const apiSlice = createApi({
         url: `/tasks/${id}/complete`,
         method: 'POST',
       }),
-      invalidatesTags: ['Task'],
+      // Optimistic update
+      onQueryStarted: async (id, { dispatch, queryFulfilled }) => {
+        const originalTask = optimisticUpdateUtils.updateTaskWithRollback(dispatch, apiSlice, id, (task) => {
+          task.completed = true;
+          task.completedDate = Date.now();
+        });
+
+        try {
+          const { data: updatedTask } = await queryFulfilled;
+          optimisticUpdateUtils.replaceTask(dispatch, apiSlice, id, updatedTask);
+        } catch {
+          if (originalTask) {
+            optimisticUpdateUtils.restoreTask(dispatch, apiSlice, originalTask);
+          }
+        }
+      },
     }),
 
     // Incomplete a task
@@ -50,7 +76,22 @@ export const apiSlice = createApi({
         url: `/tasks/${id}/incomplete`,
         method: 'POST',
       }),
-      invalidatesTags: ['Task'],
+      // Optimistic update
+      onQueryStarted: async (id, { dispatch, queryFulfilled }) => {
+        const originalTask = optimisticUpdateUtils.updateTaskWithRollback(dispatch, apiSlice, id, (task) => {
+          task.completed = false;
+          delete task.completedDate;
+        });
+
+        try {
+          const { data: updatedTask } = await queryFulfilled;
+          optimisticUpdateUtils.replaceTask(dispatch, apiSlice, id, updatedTask);
+        } catch {
+          if (originalTask) {
+            optimisticUpdateUtils.restoreTask(dispatch, apiSlice, originalTask);
+          }
+        }
+      },
     }),
 
     // Delete a task
@@ -59,7 +100,18 @@ export const apiSlice = createApi({
         url: `/tasks/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Task'],
+      // Optimistic update
+      onQueryStarted: async (id, { dispatch, queryFulfilled }) => {
+        const deletedTask = optimisticUpdateUtils.deleteTaskOptimistic(dispatch, apiSlice, id);
+
+        try {
+          await queryFulfilled;
+        } catch {
+          if (deletedTask) {
+            optimisticUpdateUtils.restoreDeletedTask(dispatch, apiSlice, deletedTask);
+          }
+        }
+      },
     }),
   }),
 });
