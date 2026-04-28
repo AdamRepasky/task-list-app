@@ -1,5 +1,6 @@
 import type { Task, TaskFilter } from '../types/task';
 import TaskItem from './TaskItem';
+import { t } from '../i18n';
 
 interface TaskListProps {
   tasks: Task[];
@@ -24,38 +25,38 @@ export default function TaskList({ tasks, filter, onToggle, onDelete, onEdit, is
   });
 
   return (
-    <div style={{ minHeight: '240px' }}>
+    <div className="task-container-min-height">
       {error ? (
-        <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '240px' }}>
-          <div className="card border-warning" style={{ maxWidth: '400px' }}>
+        <div className="d-flex align-items-center justify-content-center task-container-min-height">
+          <div className="card border-warning error-card-max-width">
             <div className="card-body text-center py-4">
               <div className="mb-3">
-                <i className="bi bi-wifi-off text-warning" style={{ fontSize: '2rem' }}></i>
+                <i className="bi bi-wifi-off text-warning connection-icon-large"></i>
               </div>
-              <h5 className="card-title text-warning mb-2">Connection Error</h5>
-              <p className="card-text text-muted mb-0">Unable to load tasks. Please reload the page later.</p>
+              <h5 className="card-title text-warning mb-2">{t.UI_STATES.CONNECTION_ERROR}</h5>
+              <p className="card-text text-muted mb-0">{t.UI_STATES.CONNECTION_ERROR_MESSAGE}</p>
             </div>
           </div>
         </div>
       ) : isLoading ? (
-        <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '240px' }}>
+        <div className="d-flex align-items-center justify-content-center task-container-min-height">
           <div className="d-flex align-items-center">
             <div className="spinner-grow spinner-grow-sm me-2" role="status"></div>
-            <span className="text-muted">Loading tasks...</span>
+            <span className="text-muted">{t.UI_STATES.LOADING_TASKS}</span>
           </div>
         </div>
       ) : filteredTasks.length === 0 ? (
         <div className="text-center py-4">
           {filter === 'active' ? (
-            <p className="text-secondary small">No active tasks</p>
+            <p className="text-secondary small">{t.UI_STATES.NO_ACTIVE_TASKS}</p>
           ) : filter === 'completed' ? (
-            <p className="text-secondary small">No completed tasks</p>
+            <p className="text-secondary small">{t.UI_STATES.NO_COMPLETED_TASKS}</p>
           ) : (
-            <p className="text-secondary small">No tasks found.</p>
+            <p className="text-secondary small">{t.UI_STATES.NO_TASKS_FOUND}</p>
           )}
         </div>
       ) : (
-        <div className="overflow-auto" style={{ maxHeight: '400px' }}>
+        <div className="overflow-auto task-list-max-height">
           {filteredTasks.map(task => (
             <TaskItem
               key={task.id}

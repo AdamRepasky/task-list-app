@@ -1,4 +1,5 @@
 import type { TaskFilter, Task } from '../types/task';
+import { t } from '../i18n';
 
 interface BottomTaskControlsProps {
   filter: TaskFilter;
@@ -14,11 +15,9 @@ export default function BottomTaskControls({ filter, onFilterChange, tasks, onDe
     <div className="border-top p-3">
       <div className="row align-items-center">
         <div className="col-12 col-md-4 text-muted text-center text-md-start order-1 order-md-1">
-          {tasks.length > 0 ? (
-            `${completedTasksCount}/${tasks.length} completed`
-          ) : (
-            <span style={{ visibility: 'hidden' }}>0/0 completed</span>
-          )}
+          <span className={tasks.length > 0 ? 'visibility-visible' : 'visibility-hidden'}>
+            {`${completedTasksCount}/${tasks.length} ${t.ACTIONS.COMPLETED}`}
+          </span>
         </div>
         
         <div className="col-12 col-md-4 d-flex justify-content-center order-3 order-md-2 mt-2 mt-md-0">
@@ -50,7 +49,7 @@ export default function BottomTaskControls({ filter, onFilterChange, tasks, onDe
             onClick={onDeleteCompleted}
             disabled={completedTasksCount === 0}
           >
-            <i className="bi bi-trash"></i> Delete completed
+            <i className="bi bi-trash"></i> {t.ACTIONS.DELETE_COMPLETED}
           </button>
         </div>
       </div>

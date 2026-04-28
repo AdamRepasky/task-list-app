@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { t } from '../i18n';
 
 interface ToastProps {
   message: string;
@@ -26,17 +27,10 @@ export default function Toast({ message, onClose }: ToastProps) {
 
   return (
     <div 
-      className="toast show animate-slide-in-left p-0 border-0"
+      className={`toast show animate-slide-in-left p-0 border-0 toast-fade-transition ${isFadingOut ? 'toast-fade-out' : 'toast-fade-in'} toast-responsive`}
       role="alert" 
       aria-live="assertive" 
       aria-atomic="true"
-      style={{
-        opacity: isFadingOut ? 0 : 1,
-        transition: 'opacity 0.2s ease-out',
-        maxWidth: 'calc(100vw - 2rem)',
-        minWidth: '250px',
-        wordWrap: 'break-word'
-      }}
     >
       <div className="toast-header bg-danger text-white border-0">
         <strong className="me-auto">Error</strong>
@@ -44,7 +38,7 @@ export default function Toast({ message, onClose }: ToastProps) {
           type="button" 
           className="btn-close btn-close-white" 
           onClick={handleClose}
-          aria-label="Close"
+          aria-label={t.ACCESSIBILITY.CLOSE}
         ></button>
       </div>
       <div className="toast-body">

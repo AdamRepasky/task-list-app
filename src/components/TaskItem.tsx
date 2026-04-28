@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Task } from '../types/task';
+import { t } from '../i18n';
 
 interface TaskItemProps {
   task: Task;
@@ -57,9 +58,8 @@ export default function TaskItem({ task, onToggle, onDelete, onEdit }: TaskItemP
   return (
     <div 
       ref={taskItemRef}
-      className="d-flex align-items-center gap-3 p-3 bg-light border-top"
+      className={`d-flex align-items-center gap-3 p-3 bg-light border-top ${isEditing ? 'cursor-default' : 'cursor-pointer'}`}
       onDoubleClick={handleDoubleClick}
-      style={{ cursor: isEditing ? 'default' : 'pointer' }}
     >
       <input
         type="checkbox"
@@ -80,15 +80,14 @@ export default function TaskItem({ task, onToggle, onDelete, onEdit }: TaskItemP
           <button
             onClick={handleSave}
             className="btn btn-primary btn-sm"
-            aria-label="Save"
+            aria-label={t.ACCESSIBILITY.SAVE}
           >
             <i className="bi bi-check"></i>
           </button>
         </div>
       ) : (
         <div 
-          className={`flex-grow-1 ${task.completed ? 'text-decoration-line-through text-muted' : ''}`}
-          style={{ padding: '0.375rem 0.75rem' }}
+          className={`flex-grow-1 ${task.completed ? 'text-decoration-line-through text-muted' : ''} task-text-padding`}
         >
           {task.text}
         </div>

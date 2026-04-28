@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Task } from '../types/task';
+import { t } from '../i18n';
 
 interface TopTaskControlsProps {
   onAdd: (title: string) => void;
@@ -26,7 +27,7 @@ export default function TopTaskControls({ onAdd, tasks, onCompleteAll }: TopTask
           type="button"
           className={`btn ${activeTasksCount === 0 ? 'btn-outline-warning' : 'btn-outline-success'}`}
           onClick={onCompleteAll}
-          title={activeTasksCount === 0 ? 'Uncheck all tasks' : 'Complete all tasks'}
+          title={activeTasksCount === 0 ? t.TITLES.UNCHECK_ALL : t.TITLES.COMPLETE_ALL}
         >
           <i className='bi-check-all'></i>
         </button>
@@ -34,7 +35,7 @@ export default function TopTaskControls({ onAdd, tasks, onCompleteAll }: TopTask
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Add a new task..."
+          placeholder={t.PLACEHOLDERS.NEW_TASK}
           className="form-control flex-grow-1"
         />
         <button 

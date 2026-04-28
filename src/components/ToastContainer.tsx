@@ -9,12 +9,7 @@ export default function ToastContainer() {
 
   return (
     <div 
-      className="position-fixed bottom-0 start-0 p-3 d-flex flex-column gap-2"
-      style={{
-        zIndex: 9999,
-        maxWidth: '100vw',
-        boxSizing: 'border-box'
-      }}
+      className="position-fixed bottom-0 start-0 p-3 d-flex flex-column gap-2 toast-container-fixed"
     >
       {toasts.map((toast) => (
         <Toast
