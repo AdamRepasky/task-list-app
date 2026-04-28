@@ -13,10 +13,25 @@ export default function TaskItem({ task, onToggle, onDelete, onEdit }: TaskItemP
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(task.text);
   const taskItemRef = useRef<HTMLDivElement>(null);
+  const longPressTimer = useRef<number | null>(null);
 
   const handleDoubleClick = () => {
     setIsEditing(true);
     setEditText(task.text);
+  };
+
+  const handleTouchStart = () => {
+    longPressTimer.current = setTimeout(() => {
+      setIsEditing(true);
+      setEditText(task.text);
+    }, 500); // 500ms long press
+  };
+
+  const handleTouchEnd = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
   };
 
   const handleSave = () => {
@@ -60,6 +75,8 @@ export default function TaskItem({ task, onToggle, onDelete, onEdit }: TaskItemP
       ref={taskItemRef}
       className={`d-flex align-items-center gap-3 p-3 bg-light border-top ${isEditing ? 'cursor-default' : 'cursor-pointer'}`}
       onDoubleClick={handleDoubleClick}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <input
         type="checkbox"
