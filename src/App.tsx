@@ -21,7 +21,7 @@ function App() {
   const handleAddTask = async (text: string) => {
     const result = await createTask({ text })
     if (result.error) {
-      dispatch(addToast('Failed to create task'));
+      dispatch(addToast('Unable to add task. Please check your connection and try again.'));
     }
   }
 
@@ -37,14 +37,14 @@ function App() {
     }
     
     if (result.error) {
-      dispatch(addToast('Failed to update task'));
+      dispatch(addToast('Could not update task status. Please try again later.'));
     }
   }
 
   const handleDeleteTask = async (id: string) => {
     const result = await deleteTask(id)
     if (result.error) {
-      dispatch(addToast('Failed to delete task'));
+      dispatch(addToast('Unable to delete task. Please try again later.'));
     }
   }
 
@@ -52,7 +52,7 @@ function App() {
     const completedTasks = tasks.filter(task => task.completed)
     const results = await Promise.all(completedTasks.map(task => deleteTask(task.id)))
     if (results.some(result => result.error)) {
-      dispatch(addToast('Failed to delete completed tasks'));
+      dispatch(addToast('Some completed tasks could not be deleted. Please try again later.'));
     }
   }
 
@@ -64,19 +64,19 @@ function App() {
       // Complete all incomplete tasks
       const results = await Promise.all(incompleteTasks.map(task => completeTask(task.id)))
       if (results.some(result => result.error)) {
-        dispatch(addToast('Failed to complete all tasks'));
+        dispatch(addToast('Unable to complete all tasks. Please try again later.'));
       }
     } else {
       // Uncheck all completed tasks
       const results = await Promise.all(completedTasks.map(task => incompleteTask(task.id)))
       if (results.some(result => result.error)) {
-        dispatch(addToast('Failed to uncheck all tasks'));
+        dispatch(addToast('Unable to uncheck all tasks. Please try again later.'));
       }
     }
   }
 
   return (
-    <div className="container my-4 border rounded p-0" style={{ maxWidth: 800 }}>
+    <div className="card border rounded p-0 my-md-4 mx-auto" style={{ maxWidth: 800 }}>
       <header className="mb-2">
         <h1 className="text-center fw-bold">Todo List</h1>
       </header>

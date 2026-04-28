@@ -16,12 +16,11 @@ export default function ToastContainer() {
         boxSizing: 'border-box'
       }}
     >
-      {toasts.map((toast, index) => (
+      {toasts.map((toast) => (
         <Toast
           key={toast.id}
           message={toast.message}
           onClose={() => dispatch(removeToast(toast.id))}
-          index={index}
         />
       ))}
     </div>

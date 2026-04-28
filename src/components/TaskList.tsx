@@ -22,7 +22,7 @@ export default function TaskList({ tasks, filter, onToggle, onDelete, isLoading 
   });
 
   return (
-    <div>
+    <div style={{ minHeight: '240px' }}>
       {!isLoading && filteredTasks.length === 0 ? (
         <div className="text-center py-4">
           {filter === 'active' ? (

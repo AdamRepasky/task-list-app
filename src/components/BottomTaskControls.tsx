@@ -8,17 +8,16 @@ interface BottomTaskControlsProps {
 }
 
 export default function BottomTaskControls({ filter, onFilterChange, tasks, onDeleteCompleted }: BottomTaskControlsProps) {
-  const activeTasksCount = tasks.filter(task => !task.completed).length;
   const completedTasksCount = tasks.filter(task => task.completed).length;
 
   return (
     <div className="border-top p-3">
       <div className="row align-items-center">
         <div className="col-12 col-md-4 text-muted text-center text-md-start order-1 order-md-1">
-          {activeTasksCount > 0 ? (
-            `${activeTasksCount} unfinished ${activeTasksCount === 1 ? 'item' : 'items'} remaining`
+          {tasks.length > 0 ? (
+            `${completedTasksCount}/${tasks.length} completed`
           ) : (
-            <span style={{ visibility: 'hidden' }}>0 unfinished items remaining</span>
+            <span style={{ visibility: 'hidden' }}>0/0 completed</span>
           )}
         </div>
         

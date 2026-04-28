@@ -1,6 +1,8 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
+body { background-color: #dadcdd; }
+
 /* Toast animations */
 @keyframes slideInLeft {
   from {

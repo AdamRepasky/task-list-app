@@ -3,10 +3,9 @@ import { useEffect, useState } from 'react';
 interface ToastProps {
   message: string;
   onClose: () => void;
-  index: number;
 }
 
-export default function Toast({ message, onClose, index }: ToastProps) {
+export default function Toast({ message, onClose }: ToastProps) {
   const [isFadingOut, setIsFadingOut] = useState(false);
 
   const handleClose = () => {

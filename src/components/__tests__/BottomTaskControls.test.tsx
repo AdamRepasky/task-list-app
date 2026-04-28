@@ -22,7 +22,7 @@ describe('BottomTaskControls', () => {
       />
     )
 
-    expect(screen.getByText(/2 unfinished items remaining/)).toBeInTheDocument()
+    expect(screen.getByText(/1\/3 completed/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'All' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Active' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Completed' })).toBeInTheDocument()
@@ -41,7 +41,22 @@ describe('BottomTaskControls', () => {
       />
     )
 
-    expect(screen.getByText(/0 unfinished items remaining/)).toBeInTheDocument()
+    expect(screen.getByText(/1\/1 completed/)).toBeInTheDocument()
+  })
+
+  it('shows correct task count when there are no completed tasks', () => {
+    const incompleteTasks = mockTasks.filter(task => !task.completed)
+    
+    renderWithProvider(
+      <BottomTaskControls
+        filter="all"
+        onFilterChange={mockOnFilterChange}
+        tasks={incompleteTasks}
+        onDeleteCompleted={mockOnDeleteCompleted}
+      />
+    )
+
+    expect(screen.getByText(/0\/2 completed/)).toBeInTheDocument()
   })
 
   it('highlights the active filter button', () => {
@@ -133,33 +148,5 @@ describe('BottomTaskControls', () => {
     expect(mockOnDeleteCompleted).toHaveBeenCalledTimes(1)
   })
 
-  it('shows singular "item" when there is one unfinished task', () => {
-    const singleTask = [mockTasks[0]] // Only one incomplete task
-    
-    renderWithProvider(
-      <BottomTaskControls
-        filter="all"
-        onFilterChange={mockOnFilterChange}
-        tasks={singleTask}
-        onDeleteCompleted={mockOnDeleteCompleted}
-      />
-    )
 
-    expect(screen.getByText(/1 unfinished item remaining/)).toBeInTheDocument()
-  })
-
-  it('shows plural "items" when there are multiple unfinished tasks', () => {
-    const multipleTasks = mockTasks.filter(task => !task.completed) // 2 incomplete tasks
-    
-    renderWithProvider(
-      <BottomTaskControls
-        filter="all"
-        onFilterChange={mockOnFilterChange}
-        tasks={multipleTasks}
-        onDeleteCompleted={mockOnDeleteCompleted}
-      />
-    )
-
-    expect(screen.getByText(/2 unfinished items remaining/)).toBeInTheDocument()
-  })
 })
