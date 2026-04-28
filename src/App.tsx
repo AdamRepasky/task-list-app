@@ -1,9 +1,11 @@
 import { useAppDispatch, useAppSelector } from './store/hooks'
 import { useGetTasksQuery, useCreateTaskMutation, useCompleteTaskMutation, useIncompleteTaskMutation, useDeleteTaskMutation } from './store/apiSlice'
 import { setFilter } from './store/filterSlice'
+import { addToast } from './store/toastSlice'
 import AddTask from './components/AddTask';
 import TaskList from './components/TaskList';
 import TaskControlsComponent from './components/TaskControls';
+import ToastContainer from './components/ToastContainer';
 
 function App() {
   const dispatch = useAppDispatch()
@@ -17,10 +19,9 @@ function App() {
   const [deleteTask] = useDeleteTaskMutation()
 
   const handleAddTask = async (text: string) => {
-    try {
-      await createTask({ text })
-    } catch (err) {
-      console.error('Failed to create task:', err)
+    const result = await createTask({ text })
+    if (result.error) {
+      dispatch(addToast('Failed to create task'));
     }
   }
 
@@ -28,31 +29,30 @@ function App() {
     const task = tasks.find(t => t.id === id)
     if (!task) return
 
-    try {
-      if (task.completed) {
-        await incompleteTask(id)
-      } else {
-        await completeTask(id)
-      }
-    } catch (err) {
-      console.error('Failed to toggle task:', err)
+    let result;
+    if (task.completed) {
+      result = await incompleteTask(id)
+    } else {
+      result = await completeTask(id)
+    }
+    
+    if (result.error) {
+      dispatch(addToast('Failed to update task'));
     }
   }
 
   const handleDeleteTask = async (id: string) => {
-    try {
-      await deleteTask(id)
-    } catch (err) {
-      console.error('Failed to delete task:', err)
+    const result = await deleteTask(id)
+    if (result.error) {
+      dispatch(addToast('Failed to delete task'));
     }
   }
 
   const handleDeleteCompleted = async () => {
-    try {
-      const completedTasks = tasks.filter(task => task.completed)
-      await Promise.all(completedTasks.map(task => deleteTask(task.id)))
-    } catch (err) {
-      console.error('Failed to delete completed tasks:', err)
+    const completedTasks = tasks.filter(task => task.completed)
+    const results = await Promise.all(completedTasks.map(task => deleteTask(task.id)))
+    if (results.some(result => result.error)) {
+      dispatch(addToast('Failed to delete completed tasks'));
     }
   }
 
@@ -89,6 +89,7 @@ function App() {
           onDeleteCompleted={handleDeleteCompleted}
         />
       </main>
+      <ToastContainer />
     </div>
   )
 }
