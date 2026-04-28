@@ -90,7 +90,8 @@ export const optimisticUpdateUtils = {
       apiSlice.util.updateQueryData('getTasks', undefined, (draft: Task[]) => {
         const index = draft.findIndex(t => t.id === taskId);
         if (index !== -1) {
-          deletedTask = draft[index];
+          // Create a deep copy before the proxy gets revoked
+          deletedTask = JSON.parse(JSON.stringify(draft[index]));
           draft.splice(index, 1);
         }
       })
@@ -103,7 +104,15 @@ export const optimisticUpdateUtils = {
   restoreDeletedTask: (dispatch: any, apiSlice: any, deletedTask: Task) => {
     dispatch(
       apiSlice.util.updateQueryData('getTasks', undefined, (draft: Task[]) => {
-        draft.push(deletedTask);
+        // Find the correct position based on createdDate to maintain order
+        const insertIndex = draft.findIndex(t => t.createdDate > deletedTask.createdDate);
+        if (insertIndex === -1) {
+          // If no task has a later createdDate, add to the end
+          draft.push(deletedTask);
+        } else {
+          // Insert at the correct position to maintain chronological order
+          draft.splice(insertIndex, 0, deletedTask);
+        }
       })
     );
   },
