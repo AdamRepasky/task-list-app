@@ -1,9 +1,9 @@
 import { useAppDispatch, useAppSelector } from './store/hooks'
 import { useGetTasksQuery, useCreateTaskMutation, useCompleteTaskMutation, useIncompleteTaskMutation, useDeleteTaskMutation } from './store/apiSlice'
 import { setFilter } from './store/filterSlice'
-import TaskList from './components/TaskList'
-import AddTask from './components/AddTask'
-import TaskFilterComponent from './components/TaskFilter'
+import AddTask from './components/AddTask';
+import TaskList from './components/TaskList';
+import TaskControlsComponent from './components/TaskControls';
 
 function App() {
   const dispatch = useAppDispatch()
@@ -69,6 +69,7 @@ function App() {
           filter={filter}
           onToggle={handleToggleTask}
           onDelete={handleDeleteTask}
+          isLoading={isLoading}
         />
         {isLoading && (
         <div className="text-center py-3">
@@ -81,7 +82,7 @@ function App() {
           <p className="text-danger">Error loading tasks</p>
           </div>
         )}
-        <TaskFilterComponent 
+        <TaskControlsComponent 
           filter={filter} 
           onFilterChange={(newFilter) => dispatch(setFilter(newFilter))}
           tasks={tasks}

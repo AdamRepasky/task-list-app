@@ -6,9 +6,10 @@ interface TaskListProps {
   filter: TaskFilter;
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
+  isLoading: boolean;
 }
 
-export default function TaskList({ tasks, filter, onToggle, onDelete }: TaskListProps) {
+export default function TaskList({ tasks, filter, onToggle, onDelete, isLoading }: TaskListProps) {
   const filteredTasks = tasks.filter(task => {
     switch (filter) {
       case 'active':
@@ -22,17 +23,18 @@ export default function TaskList({ tasks, filter, onToggle, onDelete }: TaskList
 
   return (
     <div>
-      {filteredTasks.length === 0 ? (
+      {!isLoading && filteredTasks.length === 0 ? (
         <div className="text-center py-4">
-          <p className="text-muted">No tasks found</p>
-          <p className="text-secondary small">
-            {filter === 'active' ? 'No active tasks' : 
-             filter === 'completed' ? 'No completed tasks' : 
-             'Add your first task to get started!'}
-          </p>
+          {filter === 'active' ? (
+            <p className="text-secondary small">No active tasks</p>
+          ) : filter === 'completed' ? (
+            <p className="text-secondary small">No completed tasks</p>
+          ) : (
+            <p className="text-secondary small">No tasks found.</p>
+          )}
         </div>
       ) : (
-        <div>
+        <div className="overflow-auto" style={{ maxHeight: '400px' }}>
           {filteredTasks.map(task => (
             <TaskItem
               key={task.id}
