@@ -43,7 +43,21 @@ export const apiSlice = createApi({
         method: 'POST',
         body: { text },
       }),
-      invalidatesTags: ['Task'],
+      // Optimistic update
+      onQueryStarted: async ({ id, text }, { dispatch, queryFulfilled }) => {
+        const originalTask = optimisticUpdateUtils.updateTaskWithRollback(dispatch, apiSlice, id, (task) => {
+          task.text = text;
+        });
+
+        try {
+          const { data: updatedTask } = await queryFulfilled;
+          optimisticUpdateUtils.replaceTask(dispatch, apiSlice, id, updatedTask);
+        } catch {
+          if (originalTask) {
+            optimisticUpdateUtils.restoreTask(dispatch, apiSlice, originalTask);
+          }
+        }
+      },
     }),
 
     // Complete a task

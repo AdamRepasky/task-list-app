@@ -6,6 +6,7 @@ import { renderWithProvider, mockTasks } from '../../test/test-utils'
 describe('TaskList', () => {
   const mockOnToggle = vi.fn()
   const mockOnDelete = vi.fn()
+  const mockOnEdit = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -18,6 +19,7 @@ describe('TaskList', () => {
         filter="all"
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
         isLoading={false}
       />
     )
@@ -34,6 +36,7 @@ describe('TaskList', () => {
         filter="active"
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
         isLoading={false}
       />
     )
@@ -50,6 +53,7 @@ describe('TaskList', () => {
         filter="completed"
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
         isLoading={false}
       />
     )
@@ -68,6 +72,7 @@ describe('TaskList', () => {
         filter="active"
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
         isLoading={false}
       />
     )
@@ -85,6 +90,7 @@ describe('TaskList', () => {
         filter="completed"
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
         isLoading={false}
       />
     )
@@ -100,6 +106,7 @@ describe('TaskList', () => {
         filter="all"
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
         isLoading={false}
       />
     )
@@ -114,14 +121,19 @@ describe('TaskList', () => {
         filter="all"
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
         isLoading={true}
       />
     )
 
-    // Should still show tasks even when loading (based on actual component behavior)
-    expect(screen.getByText('Test task 1')).toBeInTheDocument()
-    expect(screen.getByText('Test task 2')).toBeInTheDocument()
-    expect(screen.getByText('Test task 3')).toBeInTheDocument()
+    // Should show loading spinner
+    expect(screen.getByText('Loading tasks...')).toBeInTheDocument()
+    expect(screen.getByRole('status', { name: '' })).toBeInTheDocument()
+    
+    // Should not show tasks when loading
+    expect(screen.queryByText('Test task 1')).not.toBeInTheDocument()
+    expect(screen.queryByText('Test task 2')).not.toBeInTheDocument()
+    expect(screen.queryByText('Test task 3')).not.toBeInTheDocument()
     
     // Should not show empty state when loading
     expect(screen.queryByText('No tasks found.')).not.toBeInTheDocument()
@@ -134,6 +146,7 @@ describe('TaskList', () => {
         filter="all"
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
         isLoading={false}
       />
     )
@@ -149,6 +162,7 @@ describe('TaskList', () => {
         filter="all"
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
         isLoading={false}
       />
     )
@@ -166,6 +180,7 @@ describe('TaskList', () => {
         filter="all"
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
         isLoading={false}
       />
     )
@@ -181,6 +196,7 @@ describe('TaskList', () => {
         filter="all"
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
         isLoading={false}
       />
     )
@@ -203,6 +219,7 @@ describe('TaskList', () => {
         filter="all"
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
         isLoading={false}
       />
     )

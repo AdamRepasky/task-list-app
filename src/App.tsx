@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from './store/hooks'
-import { useGetTasksQuery, useCreateTaskMutation, useCompleteTaskMutation, useIncompleteTaskMutation, useDeleteTaskMutation } from './store/apiSlice'
+import { useGetTasksQuery, useCreateTaskMutation, useCompleteTaskMutation, useIncompleteTaskMutation, useDeleteTaskMutation, useUpdateTaskMutation } from './store/apiSlice'
 import { setFilter } from './store/filterSlice'
 import { addToast } from './store/toastSlice'
 import TopTaskControls from './components/TopTaskControls';
@@ -14,6 +14,7 @@ function App() {
   // RTK Query hooks
   const { data: tasks = [], isLoading, error } = useGetTasksQuery()
   const [createTask] = useCreateTaskMutation()
+  const [updateTask] = useUpdateTaskMutation()
   const [completeTask] = useCompleteTaskMutation()
   const [incompleteTask] = useIncompleteTaskMutation()
   const [deleteTask] = useDeleteTaskMutation()
@@ -48,6 +49,13 @@ function App() {
     }
   }
 
+  const handleEditTask = async (id: string, newText: string) => {
+    const result = await updateTask({ id, text: newText })
+    if (result.error) {
+      dispatch(addToast('Unable to update task. Please try again later.'));
+    }
+  }
+
   const handleDeleteCompleted = async () => {
     const completedTasks = tasks.filter(task => task.completed)
     const results = await Promise.all(completedTasks.map(task => deleteTask(task.id)))
@@ -77,7 +85,7 @@ function App() {
 
   return (
     <div className="card border rounded p-0 my-md-4 mx-auto" style={{ maxWidth: 800 }}>
-      <header className="mb-2">
+      <header className="my-2">
         <h1 className="text-center fw-bold">Todo List</h1>
       </header>
       
@@ -88,19 +96,10 @@ function App() {
           filter={filter}
           onToggle={handleToggleTask}
           onDelete={handleDeleteTask}
+          onEdit={handleEditTask}
           isLoading={isLoading}
+          error={error}
         />
-        {isLoading && (
-        <div className="text-center py-3">
-          <div className="spinner-grow spinner-grow-sm me-2" role="status"></div>
-          <span className="text-muted">Loading tasks...</span>
-          </div>
-        )}
-        {error && (
-        <div className="text-center py-3">
-          <p className="text-danger">Error loading tasks</p>
-          </div>
-        )}
         <BottomTaskControls 
           filter={filter} 
           onFilterChange={(newFilter) => dispatch(setFilter(newFilter))}

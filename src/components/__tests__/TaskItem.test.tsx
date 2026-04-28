@@ -8,6 +8,7 @@ import type { Task } from '../../types/task'
 describe('TaskItem', () => {
   const mockOnToggle = vi.fn()
   const mockOnDelete = vi.fn()
+  const mockOnEdit = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -33,6 +34,7 @@ describe('TaskItem', () => {
         task={mockTask}
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
       />
     )
 
@@ -48,6 +50,7 @@ describe('TaskItem', () => {
         task={completedTask}
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
       />
     )
 
@@ -67,6 +70,7 @@ describe('TaskItem', () => {
         task={mockTask}
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
       />
     )
 
@@ -85,6 +89,7 @@ describe('TaskItem', () => {
         task={mockTask}
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
       />
     )
 
@@ -103,6 +108,7 @@ describe('TaskItem', () => {
         task={mockTask}
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
       />
     )
 
@@ -119,6 +125,7 @@ describe('TaskItem', () => {
         task={mockTask}
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
       />
     )
 
@@ -132,6 +139,7 @@ describe('TaskItem', () => {
         task={mockTask}
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
       />
     )
 
@@ -145,6 +153,7 @@ describe('TaskItem', () => {
         task={mockTask}
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
       />
     )
 
@@ -160,6 +169,7 @@ describe('TaskItem', () => {
         task={mockTask}
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
       />
     )
 
@@ -181,6 +191,7 @@ describe('TaskItem', () => {
         task={mockTask}
         onToggle={mockOnToggle}
         onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
       />
     )
 
@@ -191,5 +202,217 @@ describe('TaskItem', () => {
 
     expect(mockOnDelete).toHaveBeenCalledTimes(2)
     expect(mockOnDelete).toHaveBeenCalledWith('1')
+  })
+
+  // Task editing tests
+  it('enters edit mode on double click', async () => {
+    const user = userEvent.setup()
+    
+    renderWithProvider(
+      <TaskItem
+        task={mockTask}
+        onToggle={mockOnToggle}
+        onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
+      />
+    )
+
+    const taskText = screen.getByText('Test task')
+    await user.dblClick(taskText)
+
+    // Should show input field instead of text
+    expect(screen.queryByText('Test task')).not.toBeInTheDocument()
+    expect(screen.getByDisplayValue('Test task')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument()
+  })
+
+  it('calls onEdit when save button is clicked with new text', async () => {
+    const user = userEvent.setup()
+    
+    renderWithProvider(
+      <TaskItem
+        task={mockTask}
+        onToggle={mockOnToggle}
+        onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
+      />
+    )
+
+    const taskText = screen.getByText('Test task')
+    await user.dblClick(taskText)
+
+    const input = screen.getByDisplayValue('Test task')
+    await user.clear(input)
+    await user.type(input, 'Updated task')
+
+    const saveButton = screen.getByRole('button', { name: 'Save' })
+    await user.click(saveButton)
+
+    expect(mockOnEdit).toHaveBeenCalledWith('1', 'Updated task')
+    expect(mockOnEdit).toHaveBeenCalledTimes(1)
+  })
+
+  it('calls onEdit when Enter key is pressed with new text', async () => {
+    const user = userEvent.setup()
+    
+    renderWithProvider(
+      <TaskItem
+        task={mockTask}
+        onToggle={mockOnToggle}
+        onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
+      />
+    )
+
+    const taskText = screen.getByText('Test task')
+    await user.dblClick(taskText)
+
+    const input = screen.getByDisplayValue('Test task')
+    await user.clear(input)
+    await user.type(input, 'Updated task')
+    await user.keyboard('{Enter}')
+
+    expect(mockOnEdit).toHaveBeenCalledWith('1', 'Updated task')
+    expect(mockOnEdit).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not call onEdit when text is unchanged', async () => {
+    const user = userEvent.setup()
+    
+    renderWithProvider(
+      <TaskItem
+        task={mockTask}
+        onToggle={mockOnToggle}
+        onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
+      />
+    )
+
+    const taskText = screen.getByText('Test task')
+    await user.dblClick(taskText)
+
+    const saveButton = screen.getByRole('button', { name: 'Save' })
+    await user.click(saveButton)
+
+    expect(mockOnEdit).not.toHaveBeenCalled()
+  })
+
+  it('does not call onEdit when text is only whitespace', async () => {
+    const user = userEvent.setup()
+    
+    renderWithProvider(
+      <TaskItem
+        task={mockTask}
+        onToggle={mockOnToggle}
+        onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
+      />
+    )
+
+    const taskText = screen.getByText('Test task')
+    await user.dblClick(taskText)
+
+    const input = screen.getByDisplayValue('Test task')
+    await user.clear(input)
+    await user.type(input, '   ')
+    
+    const saveButton = screen.getByRole('button', { name: 'Save' })
+    await user.click(saveButton)
+
+    expect(mockOnEdit).not.toHaveBeenCalled()
+  })
+
+  it('cancels edit when Escape key is pressed', async () => {
+    const user = userEvent.setup()
+    
+    renderWithProvider(
+      <TaskItem
+        task={mockTask}
+        onToggle={mockOnToggle}
+        onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
+      />
+    )
+
+    const taskText = screen.getByText('Test task')
+    await user.dblClick(taskText)
+
+    const input = screen.getByDisplayValue('Test task')
+    await user.clear(input)
+    await user.type(input, 'Updated task')
+    await user.keyboard('{Escape}')
+
+    // Should return to original text
+    expect(screen.getByText('Test task')).toBeInTheDocument()
+    expect(screen.queryByDisplayValue('Updated task')).not.toBeInTheDocument()
+    expect(mockOnEdit).not.toHaveBeenCalled()
+  })
+
+  it('cancels edit when clicking outside', async () => {
+    const user = userEvent.setup()
+    
+    renderWithProvider(
+      <TaskItem
+        task={mockTask}
+        onToggle={mockOnToggle}
+        onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
+      />
+    )
+
+    const taskText = screen.getByText('Test task')
+    await user.dblClick(taskText)
+
+    const input = screen.getByDisplayValue('Test task')
+    await user.clear(input)
+    await user.type(input, 'Updated task')
+    
+    // Simulate click outside by clicking on document body
+    await user.click(document.body)
+
+    // Should return to original text
+    expect(screen.getByText('Test task')).toBeInTheDocument()
+    expect(screen.queryByDisplayValue('Updated task')).not.toBeInTheDocument()
+    expect(mockOnEdit).not.toHaveBeenCalled()
+  })
+
+  it('trims whitespace when saving', async () => {
+    const user = userEvent.setup()
+    
+    renderWithProvider(
+      <TaskItem
+        task={mockTask}
+        onToggle={mockOnToggle}
+        onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
+      />
+    )
+
+    const taskText = screen.getByText('Test task')
+    await user.dblClick(taskText)
+
+    const input = screen.getByDisplayValue('Test task')
+    await user.clear(input)
+    await user.type(input, '  Updated task with spaces  ')
+    
+    const saveButton = screen.getByRole('button', { name: 'Save' })
+    await user.click(saveButton)
+
+    expect(mockOnEdit).toHaveBeenCalledWith('1', 'Updated task with spaces')
+    expect(mockOnEdit).toHaveBeenCalledTimes(1)
+  })
+
+  it('shows pointer cursor on hover when not editing', () => {
+    renderWithProvider(
+      <TaskItem
+        task={mockTask}
+        onToggle={mockOnToggle}
+        onDelete={mockOnDelete}
+        onEdit={mockOnEdit}
+      />
+    )
+
+    const taskContainer = screen.getByText('Test task').closest('div')?.parentElement
+    expect(taskContainer).toHaveStyle('cursor: pointer')
   })
 })

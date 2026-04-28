@@ -13,7 +13,7 @@ export const optimisticUpdateUtils = {
 
     dispatch(
       apiSlice.util.updateQueryData('getTasks', undefined, (draft: Task[]) => {
-        draft.unshift(tempTask);
+        draft.push(tempTask);
       })
     );
 
