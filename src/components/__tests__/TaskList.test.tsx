@@ -203,7 +203,7 @@ describe('TaskList', () => {
 
     const scrollContainer = container.querySelector('.overflow-auto')
     expect(scrollContainer).toBeInTheDocument()
-    expect(scrollContainer).toHaveStyle({ maxHeight: '400px' })
+    expect(scrollContainer).toHaveClass('task-list-max-height')
   })
 
   it('renders tasks in correct order', () => {

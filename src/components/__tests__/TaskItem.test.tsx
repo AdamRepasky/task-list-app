@@ -413,6 +413,6 @@ describe('TaskItem', () => {
     )
 
     const taskContainer = screen.getByText('Test task').closest('div')?.parentElement
-    expect(taskContainer).toHaveStyle('cursor: pointer')
+    expect(taskContainer).toHaveClass('cursor-pointer')
   })
 })
