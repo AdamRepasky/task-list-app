@@ -1,7 +1,10 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
-body { background-color: #dadcdd; }
+body { 
+  background-color: #dadcdd; 
+  font-family: 'Montserrat', sans-serif;
+}
 
 /* Toast animations */
 @keyframes slideInLeft {
