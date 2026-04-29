@@ -22,16 +22,12 @@ const toastSlice = createSlice({
         id: Date.now().toString(),
         message: action.payload,
       };
-      console.log('addToast action called with:', toast);
       state.toasts.push(toast);
-      console.log('Current toasts after add:', state.toasts);
     },
     removeToast: (state, action: PayloadAction<string>) => {
-      console.log('removeToast action called for id:', action.payload);
       state.toasts = state.toasts.filter(toast => toast.id !== action.payload);
     },
     clearToasts: (state) => {
-      console.log('clearToasts action called');
       state.toasts = [];
     },
   },
