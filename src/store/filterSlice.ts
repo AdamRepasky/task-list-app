@@ -1,3 +1,7 @@
+/**
+ * Manages task filtering state for the application.
+ * Controls whether users see all tasks, active tasks only, or completed tasks only.
+ */
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { TaskFilter } from '../types/task';

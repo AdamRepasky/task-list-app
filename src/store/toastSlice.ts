@@ -1,3 +1,7 @@
+/**
+ * Manages toast notification state for user feedback.
+ * Handles displaying temporary messages with add, remove, and clear operations.
+ */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 export interface Toast {

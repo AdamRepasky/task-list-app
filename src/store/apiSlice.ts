@@ -2,7 +2,11 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { Task } from '../types/task';
 import { optimisticUpdateUtils } from '../utils/optimisticUpdateUtils';
 
-// Define the API slice
+/**
+ * Redux Toolkit Query API slice for task management.
+ * Handles all server communication including CRUD operations with optimistic updates.
+ * Provides cached data management and automatic re-fetching.
+ */
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({ 
