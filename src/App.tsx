@@ -27,7 +27,7 @@ function App() {
   return (
     <div className="card border rounded p-0 my-md-4 mx-auto app-max-width">
       <header className="my-2">
-        <h1 className="text-center fw-bold">Todo List</h1>
+        <h1 className="text-center fw-bold mb-0">Todo List</h1>
       </header>
       
       <main>
