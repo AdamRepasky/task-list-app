@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { SubmitEvent } from 'react';
 import type { Task } from '../types/task';
 import { t } from '../i18n';
 
@@ -12,7 +13,7 @@ export default function TopTaskControls({ onAdd, tasks, onCompleteAll }: TopTask
   const [title, setTitle] = useState('');
   const activeTasksCount = tasks.filter(task => !task.completed).length;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: SubmitEvent) => {
     e.preventDefault();
     if (title.trim()) {
       onAdd(title.trim());
