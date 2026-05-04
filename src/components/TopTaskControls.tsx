@@ -22,7 +22,7 @@ export default function TopTaskControls({ onAdd, tasks, onCompleteAll }: TopTask
 
   return (
     <div className="border-top p-2">
-      <form onSubmit={handleSubmit} className="d-flex gap-2 mb-2">
+      <form onSubmit={handleSubmit} className="d-flex gap-2">
         <button 
           type="button"
           className={`btn ${activeTasksCount === 0 ? 'btn-outline-warning' : 'btn-outline-success'}`}
