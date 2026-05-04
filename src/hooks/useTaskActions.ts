@@ -19,6 +19,7 @@ export const useTaskActions = (tasks: Task[]) => {
     }
   }
 
+  // TODO: Consider adding debounce
   const handleToggleTask = async (id: string) => {
     const task = tasks.find(t => t.id === id)
     if (!task) return
